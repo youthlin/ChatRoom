@@ -20,7 +20,6 @@ import java.io.InputStream;
 
 public class Server extends Application {
     private static final Logger LOG = LoggerFactory.getLogger(Server.class);
-    private Stage stage;
     private Initializable controller;
 
     public static void main(String[] args) {
@@ -30,8 +29,6 @@ public class Server extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
         LOG.trace("程序启动");
-        stage = primaryStage;
-
         String fxml = "/server.fxml";
         FXMLLoader loader = new FXMLLoader();
         InputStream in = getClass().getResourceAsStream(fxml);
@@ -41,12 +38,11 @@ public class Server extends Application {
         controller = loader.getController();
         if (controller instanceof ServerController)
             ((ServerController) controller).setServer(this);
-
-        stage.setTitle("聊天室 - 服务器");
-        stage.setScene(new Scene(root));
-        stage.sizeToScene();
-        stage.centerOnScreen();
-        stage.show();
+        primaryStage.setTitle("聊天室 - 服务器");
+        primaryStage.setScene(new Scene(root));
+        primaryStage.sizeToScene();
+        primaryStage.centerOnScreen();
+        primaryStage.show();
     }
 
     @Override

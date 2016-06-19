@@ -1,8 +1,4 @@
 package com.youthlin.chatroom.client;
-/**
- * Created by lin on 2016-06-08-008.
- * 客户端
- */
 
 import com.youthlin.chatroom.client.control.LoginController;
 import com.youthlin.chatroom.client.control.MainController;
@@ -20,9 +16,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
+/**
+ * Created by lin on 2016-06-08-008.
+ * 客户端
+ */
 public class Client extends Application {
     private static final Logger LOG = LoggerFactory.getLogger(Client.class);
     private Stage stage;

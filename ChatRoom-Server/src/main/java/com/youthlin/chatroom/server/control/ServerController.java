@@ -56,6 +56,14 @@ public class ServerController implements Initializable {
     private int port;
     private ConcurrentHashMap<String, UserInfo> clients;
 
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         LOG.trace("初始化控制器...");
@@ -70,10 +78,6 @@ public class ServerController implements Initializable {
         onlineUserList.setItems(onlineUsers);
 
         clients = new ConcurrentHashMap<>();
-    }
-
-    public void setServer(Server server) {
-        this.server = server;
     }
 
     public void exit() {
@@ -138,7 +142,7 @@ public class ServerController implements Initializable {
         sendButton.setDisable(!started);
         serverPort.setDisable(started);
         Message msg = new Message();
-        msg.setUser(srv);
+        msg.setUser(sys);
         msg.setType(CHAT);
         msg.setIp(srvIP);
         if (started) {
@@ -207,20 +211,18 @@ public class ServerController implements Initializable {
 
                     userLogin(name, new UserInfo(name, socket, in, out));
 
-                    //登录成功
+                    //region 登录成功循环处理消息
                     while (!socket.isClosed()) {
                         Message message = (Message) in.readObject();
                         LOG.trace("从[" + name + "]接收消息:" + message);
                         switch (message.getType()) {
                             case CHAT:
-                                Platform.runLater(() -> messages.add(message));
                                 sendBroadCast(message);
                                 break;
                             case LOGOUT:
-                                Platform.runLater(() -> messages.add(message));
                                 userLogout(message.getUser(), clients.get(message.getUser()));
                         }
-                    }
+                    }//endregion
                 } else {
                     LOG.trace("不是登录消息，不予理会");
                 }
@@ -263,9 +265,7 @@ public class ServerController implements Initializable {
         msg.setType(CHAT);
         msg.setUser(sys);
         msg.setIp(srvIP);
-        Platform.runLater(() -> messages.add(msg));
         sendBroadCast(msg);
-
         Message message = new Message();
         message.setType(Message.UserDelete);
         message.setUser(name);
@@ -285,7 +285,6 @@ public class ServerController implements Initializable {
             msg.setUser(srv);
             msg.setIp(srvIP);
             msg.setContent(content);
-            Platform.runLater(() -> messages.add(msg));
             sendBroadCast(msg);
         }
         broadcastTextArea.setText("");
@@ -294,11 +293,12 @@ public class ServerController implements Initializable {
     private void sendBroadCast(Message msg) {
         LOG.trace("发送广播消息:" + msg);
         Set<Map.Entry<String, UserInfo>> s = clients.entrySet();
-
+        //发送给每一个客户端
         for (Map.Entry<String, UserInfo> entry : s)
             send(entry.getValue(), msg);
-
-        if (msg.getType() == Message.SERVER_SHUTDOWN) {
+        if (msg.getType() == CHAT) {
+            Platform.runLater(() -> messages.add(msg));//添加到服务器消息列表
+        } else if (msg.getType() == Message.SERVER_SHUTDOWN) {
             //关闭服务器
             clients.clear();
             Platform.runLater(() -> {
