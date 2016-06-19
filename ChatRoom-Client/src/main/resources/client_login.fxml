@@ -1,0 +1,28 @@
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.text.Text?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.layout.VBox?>
+<VBox fx:controller="com.youthlin.chatroom.client.control.LoginController"
+      alignment="center" xmlns:fx="http:/javafx.com/fxml">
+    <GridPane hgap="10" vgap="10" alignment="BASELINE_CENTER">
+        <padding>
+            <Insets top="5" right="5" bottom="5" left="5"/>
+        </padding>
+        <Text text="欢迎使用聊天室" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <Label text="服务器地址" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextField fx:id="urlTextFiled" text="127.0.0.1" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="服务器端口" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <TextField fx:id="portTextField" text="5678" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="用户名" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <TextField fx:id="nameTextField" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Button fx:id="loginButton" onAction="#onLoginButtonClick"
+                text="加入" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+        <Label fx:id="tipLabel" GridPane.columnIndex="0" GridPane.rowIndex="6" GridPane.columnSpan="2"/>
+    </GridPane>
+</VBox>
