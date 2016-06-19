@@ -47,9 +47,7 @@ public class Server extends Application {
 
     @Override
     public void stop() {
-        LOG.trace("程序关闭");
-        if (controller instanceof ServerController)
-            ((ServerController) controller).exit();
-        System.exit(0);
+        if (controller instanceof ServerController){
+            ((ServerController) controller).exit();}
     }
 }

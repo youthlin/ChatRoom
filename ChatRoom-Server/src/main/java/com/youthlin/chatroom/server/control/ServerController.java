@@ -81,8 +81,19 @@ public class ServerController implements Initializable {
     }
 
     public void exit() {
+        int waitTime = 5;
         LOG.trace("即将退出服务器...");
-        executor.shutdownNow();
+        if (started)
+            executor.execute(this::stopServer);
+        System.out.println("正在清理资源，即将退出服务器，请等待" + waitTime + "秒...");
+        try {
+            executor.awaitTermination(waitTime, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            executor.shutdown();
+        }
+        System.out.println("清理完毕...");
+        System.exit(0);
     }
 
     public void onClickStartButton(ActionEvent actionEvent) {
@@ -115,9 +126,7 @@ public class ServerController implements Initializable {
                 serverSocket = new ServerSocket(port);
                 srvIP = serverSocket.getInetAddress().getHostAddress();
                 setDisable(true);
-
-                executor.execute(this::process);
-
+                executor.execute(this::process);//交给线程池处理循环等待客户端
             } catch (IOException e) {
                 e.printStackTrace();
                 setDisable(false);
@@ -165,7 +174,7 @@ public class ServerController implements Initializable {
                 executor.execute(new Handler(socket));//处理新的客户端
             }
         } catch (IOException e) {
-            e.printStackTrace();
+//            e.printStackTrace();
             LOG.trace(e.getMessage());
         }
     }
@@ -318,6 +327,7 @@ public class ServerController implements Initializable {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             LOG.trace("已关闭服务器");
         }
     }

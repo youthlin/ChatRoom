@@ -23,9 +23,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
-import static com.youthlin.chatroom.share.model.Message.CHAT;
-import static com.youthlin.chatroom.share.model.Message.UserAdd;
-import static com.youthlin.chatroom.share.model.Message.UserDelete;
+import static com.youthlin.chatroom.share.model.Message.*;
 
 /**
  * Created by lin on 2016-06-08-008.
@@ -83,6 +81,10 @@ public class MainController implements Initializable {
                         break;
                     case UserDelete:
                         Platform.runLater(() -> userDelete(msg.getUser() + "(" + msg.getIp() + ")"));
+                        break;
+                    case SERVER_SHUTDOWN:
+                        exit = true;
+                        client.login("服务器已关闭");
                         break;
                 }
             }

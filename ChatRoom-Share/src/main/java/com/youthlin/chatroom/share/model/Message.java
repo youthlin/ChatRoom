@@ -18,14 +18,6 @@ public class Message implements Serializable {
     public final static int UserDelete = 7;
     public final static int SERVER_SHUTDOWN = 8;
 
-    /**
-     * 0 无意义
-     * 1 用户登录
-     * 2 用户注销
-     * 3 聊天消息
-     * 4 添加用户
-     * 5 删除用户
-     */
     private int type;
     private Date date;
     private String user;
